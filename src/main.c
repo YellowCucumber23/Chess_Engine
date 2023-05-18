@@ -28,7 +28,6 @@ void print_bin(int temp){
 int main(){
     init();
     BOARD board[1];
-;
     parse_fen(START_FEN, board);
     int move = 0;
     int from = 6;
