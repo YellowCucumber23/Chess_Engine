@@ -13,20 +13,15 @@
 int board120[BOARD_SQUARE_NUM];
 int board64[64];
 
+void print_bin(int temp){
+    printf("\nAs Binary: ");
 
-void show_attacks(int side, BOARD *board){
-    int cur_sq;
-    for(int i = RANK_8; i >= RANK_1; --i){
-        for(int j = FILE_A; j <= FILE_H; ++j){
-            cur_sq = rank_file_to_square(i,j);
-            if(square_attack(board, side, cur_sq) == TRUE){
-                printf("X");
-            } else {
-                printf("-");
-            }
-        }
-        printf("\n");
+    for(int i = 28; i >= 0; --i){
+        if((1<<i) & temp) printf("1");
+        else printf("0");
+        if(i !=28 && i%4 ==0) printf(" ");
     }
+    printf("\n");
 }
 
 
@@ -35,14 +30,33 @@ int main(){
     BOARD board[1];
 ;
     parse_fen(START_FEN, board);
-    // print_board(board);
-    show_attacks(WHITE, board);
-    // print_board(board);
-    printf("\n\n");
-    show_attacks(BLACK, board);
+    int move = 0;
+    int from = 6;
+    int to = 12;
+    int capture = wR;
+    int promote = bR;
 
-    // printf("%d", rank_file_to_square(7,7));
-    // square_attack(board, WHITE,61);
+    move = (from) | (to << 7) | (capture << 14) | (promote << 20);
+
+    printf("\ndec:%d hex:%X\n", move, move);
+    print_bin(move);
+
+    printf("from:");
+    printf("%2d",get_from_move(move));
+    printf("\n");
+
+    printf("to:");
+    printf("%2d",get_to_move(move));
+    printf("\n");
+
+    printf("capture:");
+    printf("%2d",get_captures(move));
+    printf("\n");
+
+    printf("promote:");
+    printf("%2d",get_promotion(move));
+    printf("\n");
+    
     ASSERT(check_board(board));
 
     return 0;

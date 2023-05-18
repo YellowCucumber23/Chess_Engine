@@ -74,6 +74,13 @@ enum {FALSE, TRUE};
 
 enum castle {WK_CASTLE = 1, WQ_CASTLE = 2, BK_CASTLE = 4, BQ_CASTLE = 8};
 
+/*MOVE DEFINITION*/
+typedef struct{
+    int move;
+    int score;
+} MOVE;
+
+/*HISTORY DEFINITION*/
 typedef struct{
     int en_passant;
     int move;
@@ -118,5 +125,25 @@ int rank_file_to_square(int rank, int file);
 
 //fills a 64 bit integer
 unsigned long long rand64();
+
+/*
+000g ffff edcc ccbb bbbb baaa aaaa
+a - from move  (0x7F)
+b - to move   (0x7F <<  7)
+c - captures   (0xF << 14)
+d - en passant (0x40000)
+e - pawn start (0x80000)
+f - promotion  (0xF00000) or (0xF << 20)
+g - castle permission (0x1000000)
+*/
+int get_from_move(int move);
+int get_to_move(int move);
+int get_captures(int move);
+int get_en_passant_flag();
+int get_pawn_start_flag();
+int get_promotion(int move);
+int get_castle_perm_flag(); 
+int get_promotion_flag();
+int get_capture_flag();
 
 #endif
