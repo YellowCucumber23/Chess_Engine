@@ -23,3 +23,9 @@ int get_pawn_start_flag(){return 0x80000;}
 int get_castle_perm_flag(){return 0x1000000;} 
 int get_promotion_flag(){return 0xF00000;}
 int get_capture_flag(){return 0x7C000;}
+int create_move(int from, int to, int cap, int prom, int fl){
+    return ((from) | (to << 7) | (cap << 14) | (prom << 20) | fl);
+}
+int square_off_board(int sq) {
+    return (files_board[sq] == OFF_BOARD);
+}

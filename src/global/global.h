@@ -6,6 +6,7 @@
 #define NAME "tempName"
 #define BOARD_SQUARE_NUM 120
 #define MAX_GAME_MOVES 2048
+#define MAX_POSITION_MOVES 256
 #define START_FEN "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 
 /*DEBUG MACRO*/
@@ -90,6 +91,13 @@ typedef struct{
 
 }HISTORY;
 
+
+typedef struct{
+    MOVE move[MAX_POSITION_MOVES];
+    int count;  //number of moves on the move list
+
+}MOVE_LIST;
+
 /* BOARD DEFINITIONS */
 typedef struct {
     int pieces[BOARD_SQUARE_NUM];  //120 board representation
@@ -145,5 +153,6 @@ int get_promotion(int move);
 int get_castle_perm_flag(); 
 int get_promotion_flag();
 int get_capture_flag();
-
+int create_move(int from, int to, int cap, int prom, int fl);
+int square_off_board(int sq);
 #endif

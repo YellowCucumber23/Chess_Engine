@@ -7,9 +7,10 @@
 #include "global/global.h"
 #include "headers/attack.h"
 #include "headers/output.h"
+#include "headers/moveGeneration.h"
 
 #define START_FEN "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
-#define FEN2 "7k/8/3q4/8/4Q3/8/8/K7 b - - 3 2"
+#define FEN2 "r2k3r/p1pp1Pb1/bn3np1/2q1N3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R b KQ - 1 3"
 
 int board120[BOARD_SQUARE_NUM];
 int board64[64];
@@ -29,20 +30,13 @@ void print_bin(int temp){
 int main(){
     init();
     BOARD board[1];
-    parse_fen(START_FEN, board);
-    int move = 0;
-    int prom = bK;
-    int from = A2;
-    int to = H7;
-    int cap = wP;
+    MOVE_LIST list[1];
+    parse_fen(FEN2, board);
+    print_board(board);
 
-    move = (from) | (to << 7) | (cap << 14) | (prom << 20);
+    generate_all_moves(board,list);
+    print_move_list(list);
 
-    printf("from: %d to: %d capture: %d promote: %d\n", get_from_move(move), get_to_move(move), get_captures(move), get_promotion(move));
-
-    printf("Algebraic From: %s\n", print_square(from));
-    printf("Algebraic To: %s\n", print_square(to));
-    printf("Move: %s\n", print_move(move));
     ASSERT(check_board(board));
 
     return 0;
