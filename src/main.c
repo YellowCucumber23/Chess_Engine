@@ -6,6 +6,7 @@
 #include "headers/board.h"
 #include "global/global.h"
 #include "headers/attack.h"
+#include "headers/output.h"
 
 #define START_FEN "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 #define FEN2 "7k/8/3q4/8/4Q3/8/8/K7 b - - 3 2"
@@ -30,32 +31,18 @@ int main(){
     BOARD board[1];
     parse_fen(START_FEN, board);
     int move = 0;
-    int from = 6;
-    int to = 12;
-    int capture = wR;
-    int promote = bR;
+    int prom = bK;
+    int from = A2;
+    int to = H7;
+    int cap = wP;
 
-    move = (from) | (to << 7) | (capture << 14) | (promote << 20);
+    move = (from) | (to << 7) | (cap << 14) | (prom << 20);
 
-    printf("\ndec:%d hex:%X\n", move, move);
-    print_bin(move);
+    printf("from: %d to: %d capture: %d promote: %d\n", get_from_move(move), get_to_move(move), get_captures(move), get_promotion(move));
 
-    printf("from:");
-    printf("%2d",get_from_move(move));
-    printf("\n");
-
-    printf("to:");
-    printf("%2d",get_to_move(move));
-    printf("\n");
-
-    printf("capture:");
-    printf("%2d",get_captures(move));
-    printf("\n");
-
-    printf("promote:");
-    printf("%2d",get_promotion(move));
-    printf("\n");
-    
+    printf("Algebraic From: %s\n", print_square(from));
+    printf("Algebraic To: %s\n", print_square(to));
+    printf("Move: %s\n", print_move(move));
     ASSERT(check_board(board));
 
     return 0;
