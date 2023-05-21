@@ -52,6 +52,7 @@ extern int is_knight[13];
 extern int is_king[13];
 extern int is_rook_queen[13];
 extern int is_bishop_queen[13];
+extern int piece_slide[13];
 
 /*ENUMS to make code readable*/
 enum pieces {EMPTY, wP, wN, wB, wR, wQ, wK, bP, bN, bB, bR, bQ, bK};
