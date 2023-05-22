@@ -3,6 +3,7 @@
 #include "../headers/board.h"
 #include "../headers/validate.h"
 #include "../headers/output.h"
+#include "../headers/attack.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -135,6 +136,25 @@ void generate_all_moves(BOARD *board, MOVE_LIST *list){
                 add_capture_move(board, create_move(cur_sq, cur_sq+11, EMPTY, EMPTY, get_en_passant_flag()),list);
             }
         }
+
+        if(WK_CASTLE & board->castle_perm){
+            if(board->pieces[G1] == EMPTY && board->pieces[F1] == EMPTY){
+                if(!square_attack(board, BLACK, E1) && !square_attack(board, BLACK, F1)){
+                    add_quiet_move(board, create_move(E1, G1, EMPTY, EMPTY, get_castle_perm_flag()), list);
+                }
+            }
+        }
+
+
+        if(WQ_CASTLE & board->castle_perm){
+            if(board->pieces[B1] == EMPTY && board->pieces[C1] == EMPTY && board->pieces[D1] == EMPTY){
+                if(!square_attack(board, BLACK, D1) && !square_attack(board, BLACK, E1)){
+                    add_quiet_move(board, create_move(E1, C1, EMPTY, EMPTY, get_castle_perm_flag()), list);
+                }
+            }
+        }
+
+
     } else {
         for(int i = 0; i < board->piece_num[bP];++i){
             cur_sq = board->piece_list[bP][i];
@@ -163,6 +183,24 @@ void generate_all_moves(BOARD *board, MOVE_LIST *list){
                 add_capture_move(board, create_move(cur_sq, cur_sq-11, EMPTY, EMPTY, get_en_passant_flag()),list);
             }
         }
+
+
+        if(BK_CASTLE & board->castle_perm){
+            if(board->pieces[G8] == EMPTY && board->pieces[F8] == EMPTY){
+                if(!square_attack(board, WHITE, E8) && !square_attack(board, WHITE, F8)){
+                    add_quiet_move(board, create_move(E8, G8, EMPTY, EMPTY, get_castle_perm_flag()), list);
+                }
+            }
+        }
+
+
+        if(BQ_CASTLE & board->castle_perm){
+            if(board->pieces[B8] == EMPTY && board->pieces[C8] == EMPTY && board->pieces[D8] == EMPTY){
+                if(!square_attack(board, WHITE, D8) && !square_attack(board, WHITE, E8)){
+                    add_quiet_move(board, create_move(E8, C8, EMPTY, EMPTY, get_castle_perm_flag()), list);
+                }
+            }
+        }
     }
 
     //Sliding Pieces
@@ -173,23 +211,23 @@ void generate_all_moves(BOARD *board, MOVE_LIST *list){
     slide_piece = loop_slide_piece[piece_index++];
     while(slide_piece != 0){
         ASSERT(piece_valid(slide_piece));
-        printf("Sliders Piece Index: %d Piece: %d\n", piece_index, slide_piece);
+
         for(int i = 0; i < board->piece_num[slide_piece]; ++i){
             cur_sq = board->piece_list[slide_piece][i];
             ASSERT(square_on_board(cur_sq));
-            printf("Piece:%c on Square:%s\n", piece_char[slide_piece],print_square(cur_sq));
 
             for(int j = 0; j < num_dir[slide_piece]; ++j){
                 dir = piece_dir[slide_piece][j];
                 int temp = cur_sq + dir;
+
                 while(!square_off_board(temp)){
                     if(board->pieces[temp] != EMPTY){
                         if(piece_col[board->pieces[temp]] == (side ^ 1)){
-                            printf("\tCapture on:%s\n", print_square(temp));
+                            add_capture_move(board,create_move(cur_sq, temp, board->pieces[temp], EMPTY, 0), list );
                         }
                         break;
                     }
-                    printf("\tNormal on:%s\n", print_square(temp));
+                    add_quiet_move(board,create_move(cur_sq, temp, EMPTY, EMPTY, 0), list);
                     temp += dir;
                 }
             }
@@ -205,10 +243,10 @@ void generate_all_moves(BOARD *board, MOVE_LIST *list){
     no_slide_piece = loop_no_slide_piece[piece_index++];
     while(no_slide_piece != 0){
         ASSERT(piece_valid(no_slide_piece));
+
         for(int i = 0; i < board->piece_num[no_slide_piece]; ++i){
             cur_sq = board->piece_list[no_slide_piece][i];
             ASSERT(square_on_board(cur_sq));
-            printf("Piece:%c on Square:%s\n", piece_char[no_slide_piece],print_square(cur_sq));
 
             for(int j = 0; j < num_dir[no_slide_piece]; ++j){
                 dir = piece_dir[no_slide_piece][j];
@@ -219,11 +257,11 @@ void generate_all_moves(BOARD *board, MOVE_LIST *list){
 
                 if(board->pieces[cur_sq + dir] != EMPTY){
                     if(piece_col[board->pieces[cur_sq + dir]] == (side ^ 1)){
-                        printf("\tCapture on:%s\n", print_square(cur_sq+dir));
+                        add_capture_move(board,create_move(cur_sq, cur_sq + dir, board->pieces[cur_sq + dir], EMPTY, 0), list );
                     }
                     continue;
                 }
-                printf("\tNormal on:%s\n", print_square(cur_sq+dir));
+                add_quiet_move(board,create_move(cur_sq, cur_sq + dir, EMPTY, EMPTY, 0), list);
             }
         }
 
