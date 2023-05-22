@@ -10,7 +10,7 @@
 #include "headers/moveGeneration.h"
 
 #define START_FEN "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
-#define FEN2 "5k2/1n6/4n3/6N1/8/3N4/8/4K3 b - - 0 1"
+#define FEN2 "7k/8/5q2/8/1nQ5/5N2/8/6K1 b - - 0 1"
 
 int board120[BOARD_SQUARE_NUM];
 int board64[64];

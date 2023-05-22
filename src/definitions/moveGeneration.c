@@ -174,6 +174,27 @@ void generate_all_moves(BOARD *board, MOVE_LIST *list){
     while(slide_piece != 0){
         ASSERT(piece_valid(slide_piece));
         printf("Sliders Piece Index: %d Piece: %d\n", piece_index, slide_piece);
+        for(int i = 0; i < board->piece_num[slide_piece]; ++i){
+            cur_sq = board->piece_list[slide_piece][i];
+            ASSERT(square_on_board(cur_sq));
+            printf("Piece:%c on Square:%s\n", piece_char[slide_piece],print_square(cur_sq));
+
+            for(int j = 0; j < num_dir[slide_piece]; ++j){
+                dir = piece_dir[slide_piece][j];
+                int temp = cur_sq + dir;
+                while(!square_off_board(temp)){
+                    if(board->pieces[temp] != EMPTY){
+                        if(piece_col[board->pieces[temp]] == (side ^ 1)){
+                            printf("\tCapture on:%s\n", print_square(temp));
+                        }
+                        break;
+                    }
+                    printf("\tNormal on:%s\n", print_square(temp));
+                    temp += dir;
+                }
+            }
+            
+        }
         slide_piece = loop_slide_piece[piece_index++];
     }
 
