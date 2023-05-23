@@ -25,6 +25,5 @@ int main(){
     print_move_list(list);
 
     ASSERT(check_board(board));
-
     return 0;
 }

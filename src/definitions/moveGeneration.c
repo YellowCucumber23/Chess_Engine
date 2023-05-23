@@ -30,23 +30,23 @@ int piece_dir[13][8] = {
 
 const int num_dir[13] = {0, 0, 8, 4, 4, 8, 8, 0, 8, 4, 4, 8, 8};
 
-void add_quiet_move(BOARD *board, int move, MOVE_LIST *list){
+static void add_quiet_move(BOARD *board, int move, MOVE_LIST *list){
     list->move[list->count].move = move;
     list->move[list->count].score = 0;
     list->count++;
 }
-void add_capture_move(BOARD *board, int move, MOVE_LIST *list){
+static void add_capture_move(BOARD *board, int move, MOVE_LIST *list){
     list->move[list->count].move = move;
     list->move[list->count].score = 0;
     list->count++;
 }
-void add_en_passant_move(BOARD *board, int move, MOVE_LIST *list){
+static void add_en_passant_move(BOARD *board, int move, MOVE_LIST *list){
     list->move[list->count].move = move;
     list->move[list->count].score = 0;
     list->count++;
 }
 
-void add_white_pawn_capture_move(BOARD *board, int from, int to, int cap, MOVE_LIST *list){
+static void add_white_pawn_capture_move(BOARD *board, int from, int to, int cap, MOVE_LIST *list){
     ASSERT(piece_valid_empty(cap));
     ASSERT(square_on_board(from));
     ASSERT(square_on_board(to));
@@ -61,7 +61,7 @@ void add_white_pawn_capture_move(BOARD *board, int from, int to, int cap, MOVE_L
     }
 }
 
-void add_white_pawn_move(BOARD *board, int from, int to, MOVE_LIST *list){
+static void add_white_pawn_move(BOARD *board, int from, int to, MOVE_LIST *list){
     ASSERT(square_on_board(from));
     ASSERT(square_on_board(to));
     if(ranks_board[from] == RANK_7){
@@ -74,7 +74,7 @@ void add_white_pawn_move(BOARD *board, int from, int to, MOVE_LIST *list){
     }
 }
 
-void add_black_pawn_capture_move(BOARD *board, int from, int to, int cap, MOVE_LIST *list){
+static void add_black_pawn_capture_move(BOARD *board, int from, int to, int cap, MOVE_LIST *list){
     ASSERT(piece_valid_empty(cap));
     ASSERT(square_on_board(from));
     ASSERT(square_on_board(to));
@@ -88,7 +88,7 @@ void add_black_pawn_capture_move(BOARD *board, int from, int to, int cap, MOVE_L
     }
 }
 
-void add_black_pawn_move(BOARD *board, int from, int to, MOVE_LIST *list){
+static void add_black_pawn_move(BOARD *board, int from, int to, MOVE_LIST *list){
     ASSERT(square_on_board(from));
     ASSERT(square_on_board(to));
     if(ranks_board[from] == RANK_2){
