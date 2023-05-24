@@ -44,6 +44,7 @@ extern int piece_maj[];
 extern int piece_min[];
 extern int piece_val[];
 extern int piece_col[];
+extern int piece_pawn[];
 
 extern int files_board[BOARD_SQUARE_NUM];
 extern int ranks_board[BOARD_SQUARE_NUM];
