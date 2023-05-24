@@ -218,7 +218,7 @@ int make_move(BOARD *board, int move){
     ASSERT(check_board(board));
 
     if(square_attack(board, board->side, board->king_square[side])){
-        // take_move(board);
+        take_move(board);
         return FALSE;
     }
 
