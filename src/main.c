@@ -8,9 +8,12 @@
 #include "headers/attack.h"
 #include "headers/output.h"
 #include "headers/moveGeneration.h"
+#include "headers/makeMove.h"
 
 #define START_FEN "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 #define FEN2 "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1"
+#define KNIGHTKING "3rk2r/8/8/8/8/8/6p1/R3K2R b KQk - 0 1"
+
 
 int board120[BOARD_SQUARE_NUM];
 int board64[64];
@@ -20,9 +23,35 @@ int main(){
     init();
     BOARD board[1];
     MOVE_LIST list[1];
-    parse_fen(FEN2, board);
+    parse_fen(START_FEN, board);
     generate_all_moves(board,list);
-    print_move_list(list);
+    // print_move_list(list);
+
+    int moveNum = 0;
+    int move = 0;
+
+    // move = list->moves[0].move;
+    // make_move(board,move);
+    // print_board(board);
+
+    // take_move(board);
+    // print_board(board);
+
+    for(int i = 0; i < list->count; ++i){
+        move = list->moves[i].move;
+        if(!make_move(board, move)){
+            continue;
+        }
+
+        printf("\nMADE:%s\n", print_move(move));
+        print_board(board);
+        take_move(board);
+
+        printf("\nTAKEN:%s\n", print_move(move));
+        print_board(board);
+
+        getchar();
+    }
 
     ASSERT(check_board(board));
     return 0;

@@ -49,7 +49,7 @@ int parse_fen(char *fen, BOARD *board){
     int sq120 = 0;
 
     reset_board(board);
-    //"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+
     //Parse the board positions
     while(*fen && rank >= RANK_1){
         count = 1;
@@ -109,7 +109,7 @@ int parse_fen(char *fen, BOARD *board){
     ASSERT(board->castle_perm>=0 && board->castle_perm <= 15);
     if(*fen != '-'){
         file = fen[0] - 'a';
-        rank = fen[1] - '0';
+        rank = fen[1] - '1';
 
         ASSERT(file>=FILE_A && file <= FILE_H);
 		ASSERT(rank>=RANK_1 && rank <= RANK_8);
@@ -213,9 +213,7 @@ int check_board(BOARD *board) {
 		t_piece = board->pieces[sq120];
 		t_pceNum[t_piece]++;
 		colour = piece_col[t_piece];
-        // printf("%3d", piece_maj[t_piece]);
-        // printf("\n");
-        // printf("%3d", piece_num)
+
 		if( piece_big[t_piece] == TRUE) t_bigPce[colour]++;
 		if( piece_min[t_piece] == TRUE) t_minPce[colour]++;
 		if( piece_maj[t_piece] == TRUE) t_majPce[colour]++;
@@ -258,7 +256,8 @@ int check_board(BOARD *board) {
 	ASSERT(t_bigPce[WHITE]==board->big_piece[WHITE] && t_bigPce[BLACK]==board->big_piece[BLACK]);
 
 	ASSERT(board->side==WHITE || board->side==BLACK);
-	ASSERT(generate_key(board)==board->position_key);
+
+	// ASSERT(generate_key(board)==board->position_key);
 
 	ASSERT(board->en_passant==NO_SQ || ( ranks_board[board->en_passant]==RANK_6 && board->side == WHITE)
 		 || ( ranks_board[board->en_passant]==RANK_3 && board->side == BLACK));

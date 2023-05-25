@@ -31,18 +31,18 @@ int piece_dir[13][8] = {
 const int num_dir[13] = {0, 0, 8, 4, 4, 8, 8, 0, 8, 4, 4, 8, 8};
 
 static void add_quiet_move(BOARD *board, int move, MOVE_LIST *list){
-    list->move[list->count].move = move;
-    list->move[list->count].score = 0;
+    list->moves[list->count].move = move;
+    list->moves[list->count].score = 0;
     list->count++;
 }
 static void add_capture_move(BOARD *board, int move, MOVE_LIST *list){
-    list->move[list->count].move = move;
-    list->move[list->count].score = 0;
+    list->moves[list->count].move = move;
+    list->moves[list->count].score = 0;
     list->count++;
 }
 static void add_en_passant_move(BOARD *board, int move, MOVE_LIST *list){
-    list->move[list->count].move = move;
-    list->move[list->count].score = 0;
+    list->moves[list->count].move = move;
+    list->moves[list->count].score = 0;
     list->count++;
 }
 
@@ -65,12 +65,12 @@ static void add_white_pawn_move(BOARD *board, int from, int to, MOVE_LIST *list)
     ASSERT(square_on_board(from));
     ASSERT(square_on_board(to));
     if(ranks_board[from] == RANK_7){
-        add_capture_move(board, create_move(from, to, EMPTY, wQ, 0), list);
-        add_capture_move(board, create_move(from, to, EMPTY, wR, 0), list);
-        add_capture_move(board, create_move(from, to, EMPTY, wB, 0), list);
-        add_capture_move(board, create_move(from, to, EMPTY, wN, 0), list);
+        add_quiet_move(board, create_move(from, to, EMPTY, wQ, 0), list);
+        add_quiet_move(board, create_move(from, to, EMPTY, wR, 0), list);
+        add_quiet_move(board, create_move(from, to, EMPTY, wB, 0), list);
+        add_quiet_move(board, create_move(from, to, EMPTY, wN, 0), list);
     } else {
-        add_capture_move(board, create_move(from, to, EMPTY, EMPTY, 0), list);
+        add_quiet_move(board, create_move(from, to, EMPTY, EMPTY, 0), list);
     }
 }
 
@@ -92,12 +92,12 @@ static void add_black_pawn_move(BOARD *board, int from, int to, MOVE_LIST *list)
     ASSERT(square_on_board(from));
     ASSERT(square_on_board(to));
     if(ranks_board[from] == RANK_2){
-        add_capture_move(board, create_move(from, to, EMPTY, bQ, 0), list);
-        add_capture_move(board, create_move(from, to, EMPTY, bR, 0), list);
-        add_capture_move(board, create_move(from, to, EMPTY, bB, 0), list);
-        add_capture_move(board, create_move(from, to, EMPTY, bN, 0), list);
+        add_quiet_move(board, create_move(from, to, EMPTY, bQ, 0), list);
+        add_quiet_move(board, create_move(from, to, EMPTY, bR, 0), list);
+        add_quiet_move(board, create_move(from, to, EMPTY, bB, 0), list);
+        add_quiet_move(board, create_move(from, to, EMPTY, bN, 0), list);
     } else {
-        add_capture_move(board, create_move(from, to, EMPTY, EMPTY, 0), list);
+        add_quiet_move(board, create_move(from, to, EMPTY, EMPTY, 0), list);
     }
 }
 
@@ -117,7 +117,7 @@ void generate_all_moves(BOARD *board, MOVE_LIST *list){
             if(board->pieces[cur_sq + 10] == EMPTY){
                 add_white_pawn_move(board, cur_sq, cur_sq+10, list);
                 if(ranks_board[cur_sq] == RANK_2 && board->pieces[cur_sq+20] == EMPTY){
-                    add_quiet_move(board, create_move(cur_sq, cur_sq+20, EMPTY, EMPTY,get_en_passant_flag()), list);
+                    add_quiet_move(board, create_move(cur_sq, cur_sq+20, EMPTY, EMPTY,get_pawn_start_flag()), list);
                 }
             }
 
@@ -128,13 +128,13 @@ void generate_all_moves(BOARD *board, MOVE_LIST *list){
             if(!square_off_board(cur_sq + 11) && piece_col[board->pieces[cur_sq+11]] == BLACK){
                 add_white_pawn_capture_move(board, cur_sq, cur_sq+11, board->pieces[cur_sq+11], list);
             }
-
             if(cur_sq + 9 == board->en_passant){
                 add_capture_move(board, create_move(cur_sq, cur_sq+9, EMPTY, EMPTY, get_en_passant_flag()),list);
             }
             if(cur_sq + 11 == board->en_passant){
                 add_capture_move(board, create_move(cur_sq, cur_sq+11, EMPTY, EMPTY, get_en_passant_flag()),list);
             }
+
         }
 
         if(WK_CASTLE & board->castle_perm){
@@ -151,6 +151,7 @@ void generate_all_moves(BOARD *board, MOVE_LIST *list){
                 if(!square_attack(board, BLACK, D1) && !square_attack(board, BLACK, E1)){
                     add_quiet_move(board, create_move(E1, C1, EMPTY, EMPTY, get_castle_perm_flag()), list);
                 }
+
             }
         }
 
@@ -164,7 +165,7 @@ void generate_all_moves(BOARD *board, MOVE_LIST *list){
             if(board->pieces[cur_sq - 10] == EMPTY){
                 add_black_pawn_move(board, cur_sq, cur_sq-10, list);
                 if(ranks_board[cur_sq] == RANK_7 && board->pieces[cur_sq-20] == EMPTY){
-                    add_quiet_move(board, create_move(cur_sq, cur_sq-20, EMPTY, EMPTY,get_en_passant_flag()), list);
+                    add_quiet_move(board, create_move(cur_sq, cur_sq-20, EMPTY, EMPTY,get_pawn_start_flag()), list);
                 }
             }
 
@@ -175,7 +176,6 @@ void generate_all_moves(BOARD *board, MOVE_LIST *list){
             if(!square_off_board(cur_sq - 11) && piece_col[board->pieces[cur_sq-11]] == WHITE){
                 add_black_pawn_capture_move(board, cur_sq, cur_sq-11, board->pieces[cur_sq-11], list);
             }
-
             if(cur_sq - 9 == board->en_passant){
                 add_capture_move(board, create_move(cur_sq, cur_sq-9, EMPTY, EMPTY, get_en_passant_flag()),list);
             }
@@ -215,7 +215,7 @@ void generate_all_moves(BOARD *board, MOVE_LIST *list){
         for(int i = 0; i < board->piece_num[slide_piece]; ++i){
             cur_sq = board->piece_list[slide_piece][i];
             ASSERT(square_on_board(cur_sq));
-
+            
             for(int j = 0; j < num_dir[slide_piece]; ++j){
                 dir = piece_dir[slide_piece][j];
                 int temp = cur_sq + dir;
@@ -236,7 +236,7 @@ void generate_all_moves(BOARD *board, MOVE_LIST *list){
         slide_piece = loop_slide_piece[piece_index++];
     }
 
-    //Non-sliding piece
+    // //Non-sliding piece
     int no_slide_piece = 0;
 
     piece_index = loop_no_slide_index[side];

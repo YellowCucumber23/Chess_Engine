@@ -6,10 +6,18 @@
 #include "../headers/attack.h"
 #include <stdio.h>
 
-static void hash_piece(BOARD *board, int piece, int sq){(board->position_key^= (piece_key[piece][sq]));}
-static void hash_castle(BOARD *board){(board->position_key ^= (castle_key[board->castle_perm]));}
-static void hash_side(BOARD *board){(board->position_key ^= (side_key));}
-static void hash_en_passant(BOARD *board){(board->position_key ^= (piece_key[EMPTY][board->en_passant]));}
+static void hash_piece(BOARD *board, int piece, int sq){
+    board->position_key ^= piece_key[piece][sq];
+    }
+static void hash_castle(BOARD *board){
+    board->position_key ^= castle_key[board->castle_perm];
+    }
+static void hash_side(BOARD *board){
+    board->position_key ^= side_key;
+    }
+static void hash_en_passant(BOARD *board){
+    board->position_key ^= piece_key[EMPTY][board->en_passant];
+    }
 
 const int castle_perm[120] = {
     15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
@@ -44,7 +52,6 @@ static void clear_piece(int sq, BOARD *board){
     if(piece_big[piece]){
         board->big_piece[colour]--;
         if(piece_maj[piece]){
-            board->major_piece[colour]--;
         } else {
             board->minor_piece[colour]--;
         }
@@ -60,6 +67,7 @@ static void clear_piece(int sq, BOARD *board){
         }
     }
     ASSERT(temp_piece_num != -1);
+    ASSERT(temp_piece_num >= 0 && temp_piece_num < 10);
 
     board->piece_num[piece]--;
     board->piece_list[piece][temp_piece_num] = board->piece_list[piece][board->piece_num[piece]];
@@ -68,11 +76,12 @@ static void clear_piece(int sq, BOARD *board){
 static void add_piece(BOARD *board, int sq, int piece){
     ASSERT(piece_valid(piece));
     ASSERT(square_on_board(sq));
+    
     int colour = piece_col[piece];
+
     hash_piece(board, piece, sq);
 
     board->pieces[sq] = piece;
-    board->material[colour] += piece_val[piece];
 
     if(piece_big[piece]){
         board->big_piece[colour]++;
@@ -95,10 +104,12 @@ static void move_piece(BOARD *board, int from, int to){
     ASSERT(square_on_board(to));
     int piece = board->pieces[from];
     int colour = piece_col[piece];
+    
 
 #ifdef DEBUG
-    int temp_piece_num = EMPTY;
+    int temp_piece_num = FALSE;
 #endif
+
     hash_piece(board, piece, from);
     board->pieces[from] = EMPTY;
 
@@ -106,15 +117,16 @@ static void move_piece(BOARD *board, int from, int to){
     board->pieces[to] = piece;
 
     if(!piece_big[piece]){
-        clear_bit(&board->pawns[colour], from);
-        clear_bit(&board->pawns[BOTH], from);
-        set_bit(&board->pawns[colour], to);
-        set_bit(&board->pawns[BOTH], to);
+        clear_bit(&board->pawns[colour], board120[from]);
+        clear_bit(&board->pawns[BOTH], board120[from]);
+        set_bit(&board->pawns[colour], board120[to]);
+        set_bit(&board->pawns[BOTH], board120[to]);
     }
 
     for(int i = 0; i < board->piece_num[piece]; ++i){
         if(board->piece_list[piece][i] == from){
             board->piece_list[piece][i] = to;
+
 #ifdef DEBUG
             temp_piece_num = TRUE;
 #endif
@@ -154,11 +166,12 @@ int make_move(BOARD *board, int move){
         } else if(to == G1){
             move_piece(board, H1, F1);
         } else if(to == G8){
-            move_piece(board, A8, D8);
+            move_piece(board, H8, F8);
         } else {
             ASSERT(FALSE);
         }
     }
+
     if(board->en_passant != NO_SQ){hash_en_passant(board);}
 
     hash_castle(board);
@@ -185,7 +198,7 @@ int make_move(BOARD *board, int move){
 
     board->ply_history++;
     board->ply++;
-    
+
     if(piece_pawn[board->pieces[from]]){
         board->fifty_move = 0;
         if(move & get_pawn_start_flag()){
@@ -227,6 +240,7 @@ int make_move(BOARD *board, int move){
 
 void take_move(BOARD *board){
     ASSERT(check_board(board));
+
     board->ply--;
     board->ply_history--;
 
@@ -262,18 +276,20 @@ void take_move(BOARD *board){
         }
     } else if(move & get_castle_perm_flag()){
         if(to == C1){
-            move_piece(board, A1, D1);
+            move_piece(board, D1, A1);
         } else if(to == C8){
-            move_piece(board, A8, D8);
+            move_piece(board, D8, A8);
         } else if(to == G1){
-            move_piece(board, H1, F1);
+            move_piece(board, F1, H1);
         } else if(to == G8){
-            move_piece(board, A8, D8);
+            move_piece(board, F8, H8);
         } else {
             ASSERT(FALSE);
         }
     }
-    move_piece(board, from, to);
+
+    //Fails Here
+    move_piece(board, to, from);
 
     if(is_king[board->pieces[from]]){
         board->king_square[board->side] = from;
@@ -290,9 +306,8 @@ void take_move(BOARD *board){
     if(promote != EMPTY){
         ASSERT(piece_valid(promote) && !piece_pawn[promote]);
         clear_piece(from, board);
-        add_piece(board, from, (piece_col[promote] == WHITE) ? wP : bP);
+        add_piece(board, from, (piece_col[promote] == WHITE ? wP : bP));
     }
-
     ASSERT(check_board);
 
 }

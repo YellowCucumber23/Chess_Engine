@@ -95,7 +95,7 @@ typedef struct{
 
 
 typedef struct{
-    MOVE move[MAX_POSITION_MOVES];
+    MOVE moves[MAX_POSITION_MOVES];
     int count;  //number of moves on the move list
 
 }MOVE_LIST;
