@@ -210,7 +210,7 @@ int make_move(BOARD *board, int move){
                 ASSERT(ranks_board[board->en_passant] == RANK_6);
             }
             hash_en_passant(board);
-        } 
+        }
     }
     move_piece(board, from, to);
 
@@ -228,7 +228,9 @@ int make_move(BOARD *board, int move){
     board->side ^= 1;
     hash_side(board);
 
+    //fails here
     ASSERT(check_board(board));
+    
 
     if(square_attack(board, board->side, board->king_square[side])){
         take_move(board);
@@ -288,7 +290,7 @@ void take_move(BOARD *board){
         }
     }
 
-    //Fails Here
+
     move_piece(board, to, from);
 
     if(is_king[board->pieces[from]]){

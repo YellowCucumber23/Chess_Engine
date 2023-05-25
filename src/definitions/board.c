@@ -257,7 +257,7 @@ int check_board(BOARD *board) {
 
 	ASSERT(board->side==WHITE || board->side==BLACK);
 
-	// ASSERT(generate_key(board)==board->position_key);
+	ASSERT(generate_key(board)==board->position_key);
 
 	ASSERT(board->en_passant==NO_SQ || ( ranks_board[board->en_passant]==RANK_6 && board->side == WHITE)
 		 || ( ranks_board[board->en_passant]==RANK_3 && board->side == BLACK));
