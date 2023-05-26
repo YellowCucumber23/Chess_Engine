@@ -31,16 +31,23 @@ int piece_dir[13][8] = {
 const int num_dir[13] = {0, 0, 8, 4, 4, 8, 8, 0, 8, 4, 4, 8, 8};
 
 static void add_quiet_move(BOARD *board, int move, MOVE_LIST *list){
+    ASSERT(square_on_board(get_from_move(move)));
+    ASSERT(square_on_board(get_to_move(move)));
     list->moves[list->count].move = move;
     list->moves[list->count].score = 0;
     list->count++;
 }
 static void add_capture_move(BOARD *board, int move, MOVE_LIST *list){
+    ASSERT(square_on_board(get_from_move(move)));
+    ASSERT(square_on_board(get_to_move(move)));
+    ASSERT(piece_valid(get_captures(move)));
     list->moves[list->count].move = move;
     list->moves[list->count].score = 0;
     list->count++;
 }
 static void add_en_passant_move(BOARD *board, int move, MOVE_LIST *list){
+    ASSERT(square_on_board(get_from_move(move)));
+    ASSERT(square_on_board(get_to_move(move)));
     list->moves[list->count].move = move;
     list->moves[list->count].score = 0;
     list->count++;
@@ -128,11 +135,14 @@ void generate_all_moves(BOARD *board, MOVE_LIST *list){
             if(!square_off_board(cur_sq + 11) && piece_col[board->pieces[cur_sq+11]] == BLACK){
                 add_white_pawn_capture_move(board, cur_sq, cur_sq+11, board->pieces[cur_sq+11], list);
             }
-            if(cur_sq + 9 == board->en_passant){
-                add_capture_move(board, create_move(cur_sq, cur_sq+9, EMPTY, EMPTY, get_en_passant_flag()),list);
-            }
-            if(cur_sq + 11 == board->en_passant){
-                add_capture_move(board, create_move(cur_sq, cur_sq+11, EMPTY, EMPTY, get_en_passant_flag()),list);
+
+            if(board->en_passant != OFF_BOARD){
+                if(cur_sq + 9 == board->en_passant){
+                    add_en_passant_move(board, create_move(cur_sq, cur_sq+9, EMPTY, EMPTY, get_en_passant_flag()),list);
+                }
+                if(cur_sq + 11 == board->en_passant){
+                    add_en_passant_move(board, create_move(cur_sq, cur_sq+11, EMPTY, EMPTY, get_en_passant_flag()),list);
+                }
             }
 
         }
@@ -176,11 +186,13 @@ void generate_all_moves(BOARD *board, MOVE_LIST *list){
             if(!square_off_board(cur_sq - 11) && piece_col[board->pieces[cur_sq-11]] == WHITE){
                 add_black_pawn_capture_move(board, cur_sq, cur_sq-11, board->pieces[cur_sq-11], list);
             }
-            if(cur_sq - 9 == board->en_passant){
-                add_capture_move(board, create_move(cur_sq, cur_sq-9, EMPTY, EMPTY, get_en_passant_flag()),list);
-            }
-            if(cur_sq - 11 == board->en_passant){
-                add_capture_move(board, create_move(cur_sq, cur_sq-11, EMPTY, EMPTY, get_en_passant_flag()),list);
+            if(board->en_passant != OFF_BOARD){
+                if(cur_sq - 9 == board->en_passant){
+                    add_en_passant_move(board, create_move(cur_sq, cur_sq-9, EMPTY, EMPTY, get_en_passant_flag()),list);
+                }
+                if(cur_sq - 11 == board->en_passant){
+                    add_en_passant_move(board, create_move(cur_sq, cur_sq-11, EMPTY, EMPTY, get_en_passant_flag()),list);
+                }
             }
         }
 
