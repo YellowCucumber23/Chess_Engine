@@ -27,7 +27,7 @@ int main(){
     printf("Hello\n");
 
     parse_fen(KNIGHTKING, board);
-    perft_test(board, 3);
+    perft_test(board, 4);
 
     
     ASSERT(check_board(board));
