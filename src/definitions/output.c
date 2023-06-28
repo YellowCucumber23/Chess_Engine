@@ -60,7 +60,6 @@ int parse_move(char *char_ptr, BOARD *board){
     int from = rank_file_to_square(char_ptr[1] - '1',char_ptr[0] - 'a');
     int to = rank_file_to_square(char_ptr[3] - '1',char_ptr[2] - 'a');
 
-    printf("char: %s from: %d to: %d\n",char_ptr, from, to);
     ASSERT(square_on_board(from) && square_on_board(to));
 
     MOVE_LIST list[1];
