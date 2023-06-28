@@ -13,7 +13,7 @@
 
 #define START_FEN "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 #define FEN2 "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1"
-#define KNIGHTKING "rnbq1k1r/pp1Pbppp/2p5/8/2B5/8/PPP1NnPP/RNBQK2R w KQ - 1 8"
+#define KNIGHTKING "n1n5/PPPk4/8/8/8/8/4Kppp/5N1N w - - 0 1"
 
 
 int board120[BOARD_SQUARE_NUM];
@@ -24,12 +24,29 @@ int main(){
     init();
     BOARD board[1];
     MOVE_LIST list[1];
-    printf("Hello\n");
+    char input[6];
 
     parse_fen(KNIGHTKING, board);
-    perft_test(board, 4);
+    int move = NOMOVE;
+    while(TRUE){
+        print_board(board);
+        printf("Enter a Move: ");
+        fgets(input, 6, stdin);
+
+        if(input[0] == 'q'){
+            break;
+        } else if(input[0] == 't'){
+            take_move(board);
+        } else{
+            move = parse_move(input, board);
+            if(move != NOMOVE){
+                make_move(board, move);
+            }
+        }
+        fflush(stdin);
+
+    }
 
     
-    ASSERT(check_board(board));
     return 0;
 }

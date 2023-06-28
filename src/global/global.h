@@ -8,6 +8,7 @@
 #define MAX_GAME_MOVES 2048
 #define MAX_POSITION_MOVES 256
 #define START_FEN "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+#define NOMOVE 0
 
 /*DEBUG MACRO*/
 #define DEBUG
