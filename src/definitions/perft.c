@@ -4,6 +4,7 @@
 #include "../headers/board.h"
 #include "../headers/makeMove.h"
 #include "../headers/output.h"
+#include "../headers/misc.h"
 #include <stdio.h>
 
 long leaf_node = 0;
@@ -36,7 +37,7 @@ void perft_test(BOARD *board, int depth) {
     printf("\nStarting Test To Depth:%d\n", depth);
 
     leaf_node = 0;
-
+    int start = get_time();
     MOVE_LIST list[1];
     generate_all_moves(board, list);
 
@@ -55,5 +56,5 @@ void perft_test(BOARD *board, int depth) {
         printf("move %d : %s : %ld\n", i+1, print_move(move), old_node);
     }
 
-    printf("\nTest Complete : %ld nodes visited\n", leaf_node);
+    printf("\nTest Complete : %ld nodes visited in %dms\n", leaf_node, get_time() - start);
 }

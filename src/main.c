@@ -27,30 +27,31 @@ int main(){
     char input[6];
 
     parse_fen(START_FEN, board);
-    int move = NOMOVE;
-    while(TRUE){
-        print_board(board);
-        printf("Enter a Move: ");
-        fgets(input, 6, stdin);
+    perft_test(board, 3);
+    // int move = NOMOVE;
+    // while(TRUE){
+    //     print_board(board);
+    //     printf("Enter a Move: ");
+    //     fgets(input, 6, stdin);
 
-        if(input[0] == 'q'){
-            break;
-        } else if(input[0] == 't'){
-            take_move(board);
-        } else{
-            move = parse_move(input, board);
-            if(move != NOMOVE){
-                make_move(board, move);
-                if(is_repetition(board)){
-                    printf("REP SEEN\n");
-                }
-            } else {
-                printf("Move Not Parsed:%s\n", input);
-            }
-        }
-        fflush(stdin);
+    //     if(input[0] == 'q'){
+    //         break;
+    //     } else if(input[0] == 't'){
+    //         take_move(board);
+    //     } else{
+    //         move = parse_move(input, board);
+    //         if(move != NOMOVE){
+    //             make_move(board, move);
+    //             if(is_repetition(board)){
+    //                 printf("REP SEEN\n");
+    //             }
+    //         } else {
+    //             printf("Move Not Parsed:%s\n", input);
+    //         }
+    //     }
+    //     fflush(stdin);
 
-    }
+    // }
 
     
     return 0;
