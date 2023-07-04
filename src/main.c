@@ -25,6 +25,7 @@ int main(){
     BOARD board[1];
     MOVE_LIST list[1];
     char input[6];
+    
 
     parse_fen(START_FEN, board);
     perft_test(board, 3);
