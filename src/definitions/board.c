@@ -2,6 +2,7 @@
 #include "../headers/board.h"
 #include "../headers/hashkey.h"
 #include "../headers/bitBoard.h"
+#include "../headers/pvtable.h"
 #include <stdio.h>
 //reset the board to starting positions
 void reset_board(BOARD *board){
@@ -30,10 +31,12 @@ void reset_board(BOARD *board){
     board->ply = 0;
     board->ply_history = 0;
     board->castle_perm = FALSE;
-    board->position_key = 0;
+    board->position_key = 0ULL;
     for(int i = 0; i < 13;++i){
         board->piece_num[i] = 0;
     }
+
+    init_pv_table(board->pv_table);
 }
 
 //parses a fen value

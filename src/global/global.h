@@ -78,6 +78,17 @@ enum {FALSE, TRUE};
 
 enum castle {WK_CASTLE = 1, WQ_CASTLE = 2, BK_CASTLE = 4, BQ_CASTLE = 8};
 
+/*PRINCIPLE VARIATION DEFINITIONS*/
+typedef struct{
+    unsigned long long position_key;
+    int move;
+}PV_ENTRY;
+
+typedef struct{
+    PV_ENTRY *pv_table;
+    int num_entries;
+}PV_TABLE;
+
 /*MOVE DEFINITION*/
 typedef struct{
     int move;
@@ -94,7 +105,7 @@ typedef struct{
 
 }HISTORY;
 
-
+/*MOVE LIST DEFINITION*/
 typedef struct{
     MOVE moves[MAX_POSITION_MOVES];
     int count;  //number of moves on the move list
@@ -125,17 +136,14 @@ typedef struct {
 
     HISTORY history[MAX_GAME_MOVES];
 
-
     int piece_list[13][10];
 
+    PV_TABLE pv_table[1];
 }BOARD;
 
 /*GLOBAL FUNCTIONS*/
-// Convert 64 coordinates to 120
-int rank_file_to_square(int rank, int file);
-
-//fills a 64 bit integer
-unsigned long long rand64();
+int rank_file_to_square(int rank, int file); // Convert 64 coordinates to 120
+unsigned long long rand64();//fills a 64 bit integer
 
 /*
 000g ffff edcc ccbb bbbb baaa aaaa
