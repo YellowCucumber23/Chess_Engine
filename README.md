@@ -34,7 +34,7 @@ typedef struct {
     PV_TABLE pv_table[1];
 }BOARD;
 ```
-We are also using two different arrays, a 64 length array to mimic an actual chessboard and to make runtimes faster and a 120 length array where the chess pieces will be located and will also be used for move generation in the next section. 
+We are also using two different arrays, a 64 length array to mimic an actual chessboard and to make runtimes faster and a 120 length array where the chess pieces will be located and will also be used for move generation in the next section.
 ```
 
  120 BOARD  
@@ -62,4 +62,49 @@ We are also using two different arrays, a 64 length array to mimic an actual che
  6  71   72   73   74   75   76   77   78
  7  81   82   83   84   85   86   87   88
  8  91   92   93   94   95   96   97   98
+```
+The board is designed this way so we can also easily access the same square on each board. For example, to access the square e4, we can do board120[28] and it will access e4 on board64. Similarly, if we do board64[28], we can access e4 on board120. This way, we can easily cross reference the two boards.
+
+## Move Generation
+As shown above, I chose to use a 120 length array for the board because we can detect when a piece is off the board so we can stop checking for possible moves.
+
+We then generate all legal moves for a specific side, store them in a list and use Perft testing(Performance testing) to determine the speed of the move generation as well as the number of moves possible at any position.
+
+An output of the starting board is as follows:
+
+```
+  8  r  n  b  q  k  b  n  r
+  7  p  p  p  p  p  p  p  p
+  6  .  .  .  .  .  .  .  .
+  5  .  .  .  .  .  .  .  .
+  4  .  .  .  .  .  .  .  .
+  3  .  .  .  .  .  .  .  .
+  2  P  P  P  P  P  P  P  P
+  1  R  N  B  Q  K  B  N  R
+
+     a  b  c  d  e  f  g  h
+
+Starting Test To Depth:3
+move 1 : a2a3 : 380
+move 2 : a2a4 : 420
+move 3 : b2b3 : 420
+move 4 : b2b4 : 421
+move 5 : c2c3 : 420
+move 6 : c2c4 : 441
+move 7 : d2d3 : 539
+move 8 : d2d4 : 560
+move 9 : e2e3 : 599
+move 10 : e2e4 : 600
+move 11 : f2f3 : 380
+move 12 : f2f4 : 401
+move 13 : g2g3 : 420
+move 14 : g2g4 : 421
+move 15 : h2h3 : 380
+move 16 : h2h4 : 420
+move 17 : b1a3 : 400
+move 18 : b1c3 : 440
+move 19 : g1f3 : 440
+move 20 : g1h3 : 400
+
+Test Complete : 8902 nodes visited in 52ms
 ```
