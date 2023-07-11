@@ -85,7 +85,7 @@ typedef struct{
 }PV_ENTRY;
 
 typedef struct{
-    PV_ENTRY *pv_table;
+    PV_ENTRY *pv_entry;
     int num_entries;
 }PV_TABLE;
 
